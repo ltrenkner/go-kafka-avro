@@ -2,9 +2,10 @@ package kafka
 
 import (
 	"encoding/binary"
+	"time"
+
 	"github.com/Shopify/sarama"
 	"github.com/linkedin/goavro/v2"
-	"time"
 )
 
 type AvroProducer struct {
@@ -40,12 +41,13 @@ func (ap *AvroProducer) GetSchemaId(topic string, avroCodec *goavro.Codec) (int,
 	return schemaId, nil
 }
 
+//Add new message to a topic
 func (ap *AvroProducer) Add(topic string, schema string, key []byte, value []byte) error {
 	avroCodec, err := goavro.NewCodec(schema)
 	if err != nil {
 		return err
 	}
-	schemaId, err := ap.GetSchemaId(topic, avroCodec)
+	schemaId, err := ap.GetSchemaId(topic+"-value", avroCodec)
 	if err != nil {
 		return err
 	}
@@ -61,13 +63,17 @@ func (ap *AvroProducer) Add(topic string, schema string, key []byte, value []byt
 	}
 
 	binaryMsg := &AvroEncoder{
-		SchemaID: schemaId,
+		SchemaId: schemaId,
 		Content:  binaryValue,
 	}
 	msg := &sarama.ProducerMessage{
 		Topic: topic,
-		Key:   sarama.StringEncoder(key),
 		Value: binaryMsg,
+	}
+	if key != nil {
+		msg.Key = sarama.StringEncoder(key)
+	} else {
+		msg.Key = nil
 	}
 	_, _, err = ap.producer.SendMessage(msg)
 	return err
@@ -79,7 +85,7 @@ func (ac *AvroProducer) Close() {
 
 // AvroEncoder encodes schemaId and Avro message.
 type AvroEncoder struct {
-	SchemaID int
+	SchemaId int
 	Content  []byte
 }
 
@@ -92,7 +98,7 @@ func (a *AvroEncoder) Encode() ([]byte, error) {
 	binaryMsg = append(binaryMsg, byte(0))
 	// 4-byte schema ID as returned by Schema Registry
 	binarySchemaId := make([]byte, 4)
-	binary.BigEndian.PutUint32(binarySchemaId, uint32(a.SchemaID))
+	binary.BigEndian.PutUint32(binarySchemaId, uint32(a.SchemaId))
 	binaryMsg = append(binaryMsg, binarySchemaId...)
 	// Avro serialized data in Avro's binary encoding
 	binaryMsg = append(binaryMsg, a.Content...)

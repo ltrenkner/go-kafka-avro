@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/dangkaka/go-kafka-avro"
 	"time"
+
+	"github.com/ltrenkner/go-kafka-avro"
 )
 
 var kafkaServers = []string{"localhost:9092"}

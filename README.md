@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/dangkaka/go-kafka-avro/branch/master/graph/badge.svg)](https://codecov.io/gh/dangkaka/go-kafka-avro) [![CircleCI](https://circleci.com/gh/dangkaka/go-kafka-avro.svg?style=svg)](https://circleci.com/gh/dangkaka/go-kafka-avro)
+[![codecov](https://codecov.io/gh/ltrenkner/go-kafka-avro/branch/master/graph/badge.svg)](https://codecov.io/gh/ltrenkner/go-kafka-avro) [![CircleCI](https://circleci.com/gh/ltrenkner/go-kafka-avro.svg?style=svg)](https://circleci.com/gh/ltrenkner/go-kafka-avro)
 
 # go-kafka-avro
 
@@ -7,14 +7,14 @@ A library provides consumer/producer to work with kafka, avro and schema registr
 ## Installation
 
 ```
-$ go get github.com/dangkaka/go-kafka-avro
+$ go get github.com/ltrenkner/go-kafka-avro
 ```
 
 ### Usage
 Consumer/producer examples stay [here](./examples)
 
 ```
-cd dangkaka/go-kafka-avro/examples
+cd ltrenkner/go-kafka-avro/examples
 ```
 
 * Setup kafka, schema-registry
